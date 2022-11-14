@@ -1,4 +1,6 @@
-import React, {useState, useRef} from "react"
+import React, {useState, useRef} from "react";
+import {FaGripLines} from "react-icons/fa";
+import { AiFillDelete } from "react-icons/ai";
 
 export default function Todolist(){
     const [todoInputText, setTodoInputText] = useState("");
@@ -23,7 +25,7 @@ export default function Todolist(){
 
     function handleAddTodo(){
         if(todoInputText.length > 0){
-            setTodos([...todos, { todo:todoInputText, complete: false,isDragging: false    }])
+            setTodos([...todos, { todo:todoInputText, complete: false,isDragging: false }])
         }
     }
 
@@ -114,19 +116,25 @@ export default function Todolist(){
     const handleEdit=()=>{
         setsave(false)
     }
+    function handledelete(index){
+        console.log("this is from the delete");
+        var newArr = todos;
+        newArr.splice(index,1)
+        setTodos([...newArr])
+    }
     return(
         <div className="todo-container">
             <input onChange={e=> setTodoInputText(e.target.value)} className="input-todo-text" type="text" placeholder="enter a task" />
             <button onClick={()=> handleAddTodo()} className="add-todo-button">add task</button>
             <div className="display-todo-container">
-                {todos.map((todo, index)=>(
-                    <React.Fragment>
-                        
-                    <h3 draggable droppable onDragStart={e=> D_Start(e,index)} onDragEnter={e=> D_Enter(e,index)} onDragEnd={e=> D_End(e,index)} style={{textDecoration: todo.complete ? "line-through" : "none", background: todo.complete ? "teal" : null}} onClick={e=> handleTodoClicks(e, index)} className="todo-item-text">{<div className="checkbox" >{save ? serialNumber(index):null}</div>}{todo.todo}</h3>
+                {todos.map((todo, index)=>(                   
+                
+                    <React.Fragment >
+                        <div className="Data-container" key={index}>  
+                    <h3 draggable droppable onDragStart={e=> D_Start(e,index)} onDragEnter={e=> D_Enter(e,index)} onDragEnd={e=> D_End(e,index)} style={{textDecoration: todo.complete ? "line-through" : "none", background: todo.complete ? "teal" : null,justifyContent:"center",alignItems:"center"}} onClick={e=> handleTodoClicks(e, index)} className="todo-item-text">{todo.isDragging ? <div className="icons"><FaGripLines/></div> :<div className="checkbox">{save ? serialNumber(index):null}</div> }{todo.todo}{<div className="icon-delete" onClick={()=>handledelete(index)}><AiFillDelete/></div>}</h3>
                     {todo.isDragging ?  <div className="drag-indicator"></div> : null}
-                   
-                    </React.Fragment>
-                    
+                   </div>
+                    </React.Fragment>                    
                 ))}
             </div>
             <button className="keybuttons" onClick={handleEdit}>Edit</button>
